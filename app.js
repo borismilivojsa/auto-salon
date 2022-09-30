@@ -2,6 +2,17 @@ let auto = localStorage.getItem('cars') ? JSON.parse(localStorage.getItem('cars'
 
 appendAuto()
 
+// Backend URL: http://localhost:8000
+$.ajax({
+    url: 'http://localhost:8000',
+    success: function(data){
+        data.forEach((car) => {
+            appendElement(car.id, car.marka, car.cijena, car.motor, car.snaga, car.brzina, car.image)
+        })
+    }
+})
+
+
 $('#show').click(function() {
     $('#submit-form').toggle()
     $('#show').hide()
@@ -105,11 +116,15 @@ function checkValidation(marka, cijena, motor, snaga, brzina){
     return hasErrors
 }
 
-function appendElement(id, marka, cijena, motor, snaga, brzina) {
+function appendElement(id, marka, cijena, motor, snaga, brzina, image = null) {
+    if (! image) {
+        image = 'car.jpeg'
+    }
+
     $('#cars').prepend(
         '<div class="col-12 col-sm-6 col-md-4 col-lg-3 position-relative car-card" data-id='+ id +'>'
         +'<div class="card" style="width: 20rem;">'
-        +'<img src="car.jpeg" class="card-img-top image">'
+        +'<img src="' + image + '" class="card-img-top image">'
         +'<div class="card-body">'
         +'<h5 class="card-title car-marka">Marka:<span>'+ marka +'</span></h5>'
         +'<p class="card-text car-cijena">Cijena:<span>'+ cijena +'</span></p>'
@@ -174,7 +189,7 @@ function appendElement(id, marka, cijena, motor, snaga, brzina) {
         if (hasErrors) {
             return
         }
-        console.log('.car-card[data-id='+ id +']')
+
         const noviElementi = $('.car-card[data-id='+ id +']')
         noviElementi.find('.car-marka span').text(marka)
         noviElementi.find('.car-cijena span').text(cijena)
